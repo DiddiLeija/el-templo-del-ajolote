@@ -28,8 +28,8 @@ GAME_SETUP = get_data("data.json")
 class Main:
 
     def __init__(self):
-        self.x = 1016  # 127, 123 ?
-        self.y = 984
+        self.x = 960  # 120, 112 -- x8?
+        self.y = 896
         self.stage = "o"
         pyxel.run(self.update, self.draw)
 
@@ -37,16 +37,21 @@ class Main:
         self.update_player()
 
     def draw(self):
-        #pyxel.camera(self.x-64, self.y-64)
+        pyxel.cls(0)
+        pyxel.camera()
         if self.stage == "o":
             # overworld
-            pyxel.bltm(self.x-64, self.y-64, 0, self.x-64, self.y-64, 128, 128, 0)  # TODO: Fixme!
-            pyxel.bltm(self.x-64, self.y-64, 2, self.x-64, self.y-64, 128, 128)
-    
+            draw_x = self.x-64 // 8
+            draw_y = self.y-64 // 8
+            # print(draw_x, draw_y)
+            pyxel.bltm(0, 0, 0, draw_x, draw_y, 128, 128)  # TODO: Fixme!
+            pyxel.bltm(0, 0, 2, draw_x, draw_y, 128, 128, 0)
+
     def update_player(self):
         pass
 
 
 if __name__ == "__main__":
     pyxel.init(128, 128, title=f"El Templo del Ajolote v{VERSION}", capture_scale=120)
+    pyxel.load("resource.pyxres")
     main = Main()
