@@ -34,8 +34,8 @@ class Main:
     def draw(self):
         pyxel.cls(0)
         pyxel.camera()
-        draw_x = self.x-64 // 8
-        draw_y = self.y-64 // 8
+        draw_x = self.x-448 // 8
+        draw_y = self.y-448 // 8
         if self.stage == "o":
             # overworld
             pyxel.bltm(0, 0, 0, draw_x, draw_y, 128, 128)
@@ -45,17 +45,18 @@ class Main:
 
     def update_player(self):
         # movement checks
+        if pyxel.btn(pyxel.KEY_DOWN):
+            self.y += 2
+            self.player_aspect[0] = "down"
+        elif pyxel.btn(pyxel.KEY_UP):
+            self.y -= 2
+            self.player_aspect[0] = "up"
         if pyxel.btn(pyxel.KEY_RIGHT):
             self.x += 2
             self.player_aspect[0] = "right"
         elif pyxel.btn(pyxel.KEY_LEFT):
             self.x -= 2
             self.player_aspect[0] = "left"
-        if pyxel.btn(pyxel.KEY_DOWN):
-            self.y += 2
-        elif pyxel.btn(pyxel.KEY_UP):
-            self.y -= 2
-            self.player_aspect[0] = "up"
         # aspect checks
         if self._clicking_an_arrow([pyxel.KEY_UP, pyxel.KEY_DOWN, pyxel.KEY_LEFT, pyxel.KEY_RIGHT]):
             self.player_aspect[1] = 1
@@ -68,7 +69,6 @@ class Main:
         img_pick = GAME_SETUP["images"]["axel"][self.player_aspect[0]]
         if self.player_aspect[0] != "default":
             img_pick = img_pick[self.player_aspect[1]]
-        #print(img_pick)
         pyxel.blt(self.x, self.y, 1, img_pick[0], img_pick[1], 16, 16, 0)
 
     def _clicking_an_arrow(self, keys: list):
