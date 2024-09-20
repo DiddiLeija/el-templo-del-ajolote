@@ -65,7 +65,11 @@ class Main:
         # ...
 
     def draw_player(self):
-        pass
+        img_pick = GAME_SETUP["images"]["axel"][self.player_aspect[0]]
+        if self.player_aspect[0] != "default":
+            img_pick = img_pick[self.player_aspect[1]]
+        #print(img_pick)
+        pyxel.blt(self.x, self.y, 1, img_pick[0], img_pick[1], 16, 16, 0)
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has
