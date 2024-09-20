@@ -77,6 +77,6 @@ class Main:
 
 
 if __name__ == "__main__":
-    pyxel.init(128, 128, title=f"El Templo del Ajolote v{VERSION}", capture_scale=120)
+    pyxel.init(128, 128, title=f"El Templo del Ajolote v{VERSION}", capture_sec=120)
     pyxel.load("resource.pyxres")
     main = Main()
