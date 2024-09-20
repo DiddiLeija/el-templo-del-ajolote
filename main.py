@@ -24,7 +24,7 @@ class Main:
     def __init__(self):
         self.x = 960  # 120, 112 -- x8?
         self.y = 896
-        self.player_aspect = ["default", 0]  # to be modified during gameplay
+        self.player_aspect = ["default", 0]
         self.stage = "o"
         pyxel.run(self.update, self.draw)
 
@@ -38,19 +38,42 @@ class Main:
         draw_y = self.y-64 // 8
         if self.stage == "o":
             # overworld
-            # print(draw_x, draw_y)
             pyxel.bltm(0, 0, 0, draw_x, draw_y, 128, 128)
             pyxel.bltm(0, 0, 2, draw_x, draw_y, 128, 128, 0)
         pyxel.camera(draw_x, draw_y)
         self.draw_player()
 
     def update_player(self):
-        # TODO: Move on 2.5D!
-        # TODO: "Rotate" the body with aspect fixes
-        pass
+        # movement checks
+        if pyxel.btn(pyxel.KEY_RIGHT):
+            self.x += 2
+            self.player_aspect[0] = "right"
+        elif pyxel.btn(pyxel.KEY_LEFT):
+            self.x -= 2
+            self.player_aspect[0] = "left"
+        if pyxel.btn(pyxel.KEY_DOWN):
+            self.y += 2
+        elif pyxel.btn(pyxel.KEY_UP):
+            self.y -= 2
+            self.player_aspect[0] = "up"
+        # aspect checks
+        if self._clicking_an_arrow([pyxel.KEY_UP, pyxel.KEY_DOWN, pyxel.KEY_LEFT, pyxel.KEY_RIGHT]):
+            self.player_aspect[1] = 1
+        else:
+            self.player_aspect[1] = 0
+        # (x, y) corrections according to a solid blocks list
+        # ...
 
     def draw_player(self):
         pass
+
+    def _clicking_an_arrow(self, keys: list):
+        # checks if any of a given key list has
+        # been pressed, for internal purposes.
+        for k in keys:
+            if pyxel.btn(k):
+                return True
+        return False
 
 
 if __name__ == "__main__":
