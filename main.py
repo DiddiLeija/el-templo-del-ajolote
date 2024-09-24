@@ -15,8 +15,10 @@ def get_data(fname: str) -> dict:
         print("Warning, could not load file:", fname)
     return final
 
-def get_tile(tile_x, tile_y):
-    return pyxel.tilemaps[1].pget(tile_x, tile_y)
+def get_tile(tile_x, tile_y, to_list=False):
+    if to_list:
+        return list(pyxel.tilemaps[0].pget(tile_x, tile_y))
+    return pyxel.tilemaps[0].pget(tile_x, tile_y)
 
 
 GAME_SETUP = get_data("data.json")
@@ -97,8 +99,14 @@ class Main:
         x2 = (x + 8 - 1) // 8
         y2 = (y + 8 - 1) // 8
         # print(x1, y1, "---", x2, y2)
-        rx = range(x1-8, x2+1) if dx < 0 else range(x1, x2+9)
-        ry = range(y1-8, y2+1) if dy < 0 else range(y1, y2+9)
+        #print(list(get_tile(x1, y1)), list(get_tile(x1, y1)) in solids)
+        rx = range(x1-8, x2+1) if dx < 0 else range(x1, x2)
+        ry = range(y1-8, y2+1) if dy < 0 else range(y1, y2)
+        for yi in range(y1, y2+1):
+            for xi in range(x1, x2+1):
+                if get_tile(xi, yi, True) in solids:
+                    # print("solid")
+                    pass  # TODO: fixme
         #for yi in range(y1, y2 + 1):
         #    for xi in range(x1, x2 + 1):
         #        if get_tile(xi, yi) in solids:
