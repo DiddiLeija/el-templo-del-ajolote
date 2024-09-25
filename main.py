@@ -36,13 +36,23 @@ def detect_collision(x, y):
                 return True
     return False
 
-def fix_collision(x, y, dx, dy):
+def fix_collision(x, y, dx, dy, fl=2):
     # after some failed attempts to run a standalone method,
     # we've designed this func as a modified version of those
     # used by "Diddi and Eli" and "Abandon the ship!", along with
     # "detect_collision" (which went through several modifications too)
-    #abs_dx = abs(dx)
-    #abs_dy = abs(dy)
+    abs_dx = abs(dx)
+    abs_dy = abs(dy)
+    sign = fl if dx > 0 else -(fl)
+    for _ in range(abs_dx):
+        if detect_collision(x + sign, y):
+            break
+        x += sign
+    sign = fl if dy > 0 else -(fl)
+    for _ in range(abs_dy):
+        if detect_collision(x, y + sign):
+            break
+        y += sign
     #if abs_dx > abs_dy:
     #    sign = 1 if dx > 0 else -1
     #    for _ in range(abs_dx):
@@ -66,7 +76,6 @@ def fix_collision(x, y, dx, dy):
     #            break
     #        x += sign
     return x, y
-    # TODO: fixme!!!
 
 
 GAME_SETUP = get_data("data.json")
@@ -98,20 +107,18 @@ class Main:
 
     def update_player(self):
         # movement checks
-        dx, dy = 2, 2
+        dx, dy = 0, 0
         if pyxel.btn(pyxel.KEY_DOWN):
-            self.y += 2
             self.player_aspect[0] = "down"
+            dy = 1
         elif pyxel.btn(pyxel.KEY_UP):
-            self.y -= 2
-            dy = -2
+            dy = -1
             self.player_aspect[0] = "up"
         if pyxel.btn(pyxel.KEY_RIGHT):
-            self.x += 2
             self.player_aspect[0] = "right"
+            dx = 1
         elif pyxel.btn(pyxel.KEY_LEFT):
-            self.x -= 2
-            dx = -2
+            dx = -1
             self.player_aspect[0] = "left"
         # aspect checks
         if self._clicking_an_arrow([pyxel.KEY_UP, pyxel.KEY_DOWN, pyxel.KEY_LEFT, pyxel.KEY_RIGHT]):
