@@ -61,8 +61,8 @@ GAME_SETUP = get_data("data.json")
 class Main:
 
     def __init__(self):
-        self.x = 960  # 120, 112 -- x8?
-        self.y = 896
+        self.x = 1016  # 127, 124 -- x8?
+        self.y = 992
         self.player_aspect = ["default", 0]
         self.stage = "o"
         pyxel.run(self.update, self.draw)
