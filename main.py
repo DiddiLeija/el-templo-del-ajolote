@@ -37,7 +37,6 @@ def detect_collision(x, y):
     return False
 
 def fix_collision(x, y, dx, dy, fl=2):
-    # after some failed attempts to run a standalone method,
     # we've designed this func as a modified version of those
     # used by "Diddi and Eli" and "Abandon the ship!", along with
     # "detect_collision" (which went through several modifications too)
@@ -53,28 +52,6 @@ def fix_collision(x, y, dx, dy, fl=2):
         if detect_collision(x, y + sign):
             break
         y += sign
-    #if abs_dx > abs_dy:
-    #    sign = 1 if dx > 0 else -1
-    #    for _ in range(abs_dx):
-    #        if detect_collision(x + sign, y):
-    #            break
-    #        x += sign
-    #    sign = 1 if dy > 0 else -1
-    #    for _ in range(abs_dy):
-    #        if detect_collision(x, y + sign):
-    #            break
-    #        y += sign
-    #else:
-    #    sign = 1 if dy > 0 else -1
-    #    for _ in range(abs_dy):
-    #        if detect_collision(x, y + sign):
-    #            break
-    #        y += sign
-    #    sign = 1 if dx > 0 else -1
-    #    for _ in range(abs_dx):
-    #        if detect_collision(x + sign, y):
-    #            break
-    #        x += sign
     return x, y
 
 
@@ -94,16 +71,19 @@ class Main:
         self.update_player()
 
     def draw(self):
+        draw_a, draw_b = 0, 0
         pyxel.cls(0)
-        pyxel.camera()
+        pyxel.camera()  # camera fix 1
         draw_x = self.x-448 // 8
         draw_y = self.y-448 // 8
         if self.stage == "o":
             # overworld
-            pyxel.bltm(0, 0, 0, draw_x, draw_y, 128, 128)
-            pyxel.bltm(0, 0, 2, draw_x, draw_y, 128, 128, 0)
-        pyxel.camera(draw_x, draw_y)
+            draw_a, draw_b = 0, 2
+        pyxel.bltm(0, 0, draw_a, draw_x, draw_y, 128, 128)  # background
+        pyxel.camera(draw_x, draw_y)  # camera fix 2
         self.draw_player()
+        pyxel.camera()  # camera fix 3
+        pyxel.bltm(0, 0, draw_b, draw_x, draw_y, 128, 128, 0)  # backgound additions
 
     def update_player(self):
         # movement checks
