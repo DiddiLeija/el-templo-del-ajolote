@@ -59,18 +59,32 @@ GAME_SETUP = get_data("data.json")
 
 
 class Main:
+    plot_index = 0
 
     def __init__(self):
         self.x = 1016  # 127, 124 -- x8?
         self.y = 992
         self.player_aspect = ["default", 0]
         self.stage = "o"
+        self.open_mode = False
+        self.intro = True
         pyxel.run(self.update, self.draw)
 
     def update(self):
+        if self.intro:
+            self.update_story(0)
+            return
         self.update_player()
+        if not self.open_mode:
+            self.update_locked()
 
     def draw(self):
+        if self.intro:
+            self.draw_story(0)
+        else:
+            self.draw_general()
+
+    def draw_general(self):
         draw_a, draw_b = 0, 0
         pyxel.cls(0)
         pyxel.camera()  # camera fix 1
@@ -113,6 +127,20 @@ class Main:
         if self.player_aspect[0] != "default":
             img_pick = img_pick[self.player_aspect[1]]
         pyxel.blt(self.x, self.y, 1, img_pick[0], img_pick[1], 16, 16, 0)
+    
+    def update_locked(self):
+        "main mission, other tasks are locked."
+    
+    def update_open(self):
+        "once the main mission's done, open tasks are unlocked."
+    
+    def update_story(self, id=0):
+        "tell a story."
+        plot = GAME_SETUP["stories"][id]
+    
+    def draw_story(self, id=0):
+        "DRAW a story."
+        plot = GAME_SETUP["stories"][id]
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has
