@@ -15,10 +15,17 @@ def get_data(fname: str) -> dict:
         print("Warning, could not load file:", fname)
     return final
 
+
+GAME_SETUP = get_data("data.json")
+BACKGROUND_1 = 0
+BACKGROUND_2 = 2
+
+
 def get_tile(tile_x, tile_y, to_list=False):
     if to_list:
-        return list(pyxel.tilemaps[0].pget(tile_x, tile_y))
-    return pyxel.tilemaps[0].pget(tile_x, tile_y)
+        return list(pyxel.tilemaps[BACKGROUND_1].pget(tile_x, tile_y))
+    return pyxel.tilemaps[BACKGROUND_1].pget(tile_x, tile_y)
+
 
 def detect_collision(x, y):
     solids = GAME_SETUP["solid_block_tiles"]
@@ -35,6 +42,7 @@ def detect_collision(x, y):
             if get_tile(xi, yi, True) in solids:
                 return True
     return False
+
 
 def fix_collision(x, y, dx, dy, fl=2):
     # we've designed this func as a modified version of those
@@ -55,11 +63,8 @@ def fix_collision(x, y, dx, dy, fl=2):
     return x, y
 
 
-GAME_SETUP = get_data("data.json")
-
-
 class Main:
-    plot_index = 0
+    #####  MAIN CLASS  #####
 
     def __init__(self):
         self.x = 1016  # 127, 124 -- x8?
@@ -68,31 +73,25 @@ class Main:
         self.stage = "o"
         self.open_mode = False
         self.intro = True
+        self.plot_index = 0
         pyxel.run(self.update, self.draw)
 
     def update(self):
         if self.intro:
             self.update_story(0)
-            return
         self.update_player()
         if not self.open_mode:
             self.update_locked()
 
     def draw(self):
-        if self.intro:
-            self.draw_story(0)
-        else:
-            self.draw_general()
+        self.draw_general()
 
     def draw_general(self):
-        draw_a, draw_b = 0, 0
+        draw_a, draw_b = BACKGROUND_1, BACKGROUND_2  # TODO: use BACKGROUND_* directly?
         pyxel.cls(0)
         pyxel.camera()  # camera fix 1
         draw_x = self.x-448 // 8
         draw_y = self.y-448 // 8
-        if self.stage == "o":
-            # overworld
-            draw_a, draw_b = 0, 2
         pyxel.bltm(0, 0, draw_a, draw_x, draw_y, 128, 128)  # background
         pyxel.camera(draw_x, draw_y)  # camera fix 2
         self.draw_player()
@@ -127,20 +126,23 @@ class Main:
         if self.player_aspect[0] != "default":
             img_pick = img_pick[self.player_aspect[1]]
         pyxel.blt(self.x, self.y, 1, img_pick[0], img_pick[1], 16, 16, 0)
-    
+
     def update_locked(self):
         "main mission, other tasks are locked."
-    
+
     def update_open(self):
         "once the main mission's done, open tasks are unlocked."
-    
+
     def update_story(self, id=0):
         "tell a story."
+        global BACKGROUND_1, BACKGROUND_2
         plot = GAME_SETUP["stories"][id]
-    
-    def draw_story(self, id=0):
-        "DRAW a story."
-        plot = GAME_SETUP["stories"][id]
+        ptype = plot[self.plot_index][0]
+        pdata = plot[self.plot_index][1:]
+        if ptype == "set":
+            # set the player to a certain position
+            BACKGROUND_1, BACKGROUND_2, self.x, self.y = pdata[0], pdata[1], pdata[2], pdata[3]
+            self.plot_index += 1
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has
@@ -149,6 +151,7 @@ class Main:
             if pyxel.btn(k):
                 return True
         return False
+
 
 if __name__ == "__main__":
     pyxel.init(128, 128, title=f"El Templo del Ajolote v{VERSION}", capture_sec=120)
