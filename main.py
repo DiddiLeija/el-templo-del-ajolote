@@ -110,6 +110,7 @@ class Main:
         pyxel.bltm(0, 0, draw_a, draw_x, draw_y, 128, 128)  # background
         pyxel.camera(draw_x, draw_y)  # camera fix 1
         self.draw_player()
+        self.draw_npc()
         pyxel.camera()  # camera fix 2
         pyxel.bltm(0, 0, draw_b, draw_x, draw_y, 128, 128, 0)  # backgound additions
 
@@ -143,6 +144,23 @@ class Main:
         if self.player_aspect[0] != "default":
             img_pick = img_pick[self.player_aspect[1]]
         pyxel.blt(self.x, self.y, 1, img_pick[0], img_pick[1], 16, 16, 0)
+    
+    def draw_npc(self):
+        # draw all the non-playable-characters available.
+        npcs = GAME_SETUP["npc_locations"][BACKGROUND_1]  # TODO: Make sure this works anytime!
+        for c in npcs:
+            sz = 0
+            if c[0] in GAME_SETUP["images"].keys():
+                # 16x16
+                sz = 16
+            elif c[0] in GAME_SETUP["images-8"].keys():
+                # 8x8
+                sz = 8
+            if sz != 0 and self._in_the_map(c[2], c[3], sz):
+                tp = "images-8" if sz == 8 else "images"
+                bnk = 0 if sz == 8 else 1
+                npc_u, npc_v = GAME_SETUP[tp][c[0]][c[1]]
+                pyxel.blt(c[2], c[3], bnk, npc_u, npc_v, sz, sz, 0)
 
     def update_locked(self):
         "main mission, other tasks are locked."
@@ -173,8 +191,8 @@ class Main:
                 self.should_update_player = True
         elif ptype == "task":
             # you must get somewhere.
-            if pdata[0][0] in range(self.x, self.x + 17):
-                if pdata[0][1] in range(self.y, self.y + 17):
+            if pdata[0][0] in range(self.x + 2, self.x + 15):
+                if pdata[0][1] in range(self.y + 2, self.y + 15):
                     self.plot_index += 1
     
     def draw_story(self, id=0):
@@ -210,6 +228,17 @@ class Main:
         for k in keys:
             if pyxel.btn(k):
                 return True
+        return False
+
+    def _in_the_map(self, cx, cy, size):
+        # check if (x, y) is on the screen
+        if size < 1:
+            # can't check over 0-sized items, return False
+            return False
+        for xi in range(cx, cx + size + 1):
+            for yi in range(cy, cy + size + 1):
+                if xi in range(self.x - 64, self.x + 65) and yi in range(self.y - 64, self.y + 65):
+                    return True
         return False
 
 

@@ -50,6 +50,14 @@
             "chat": [[16, 112]]
         }
     },
+    "images-8": {
+        "flower_pot": {
+            "early": [0, 24],
+            "early2": [8, 24],
+            "red": [0, 32],
+            "white": [8, 32]
+        }
+    },
     "stories": [
         [
             ["set", 1, 4, 1016, 950],
@@ -57,6 +65,20 @@
             ["dialog", "abue", "Hola Axel... ¿Podrias por favor\nir a la tienda?", 0],
             ["task", [1016, 968], "Sal de la casa."],
             ["set", 0, 2, 1016, 974]
+        ]
+    ],
+    "npc_locations": [
+        [
+            ["flower_pot", "white", 995, 968],
+            ["flower_pot", "red", 1037, 968],
+            ["flower_pot", "early2", 1064, 1002],
+            ["flower_pot", "early2", 1072, 1002],
+            ["flower_pot", "white", 1080, 1002],
+            ["flower_pot", "early", 1088, 1002],
+            ["flower_pot", "red", 1096, 1002]
+        ],
+        [
+            ["abue", "default", 1016, 930]
         ]
     ]
 }
