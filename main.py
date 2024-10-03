@@ -13,6 +13,7 @@ def get_data(fname: str) -> dict:
             final = json.loads(dfile.read())
     except Exception:
         print("Warning, could not load file:", fname)
+        print("All your game data / DLCs may be corrupted.")
     return final
 
 
@@ -45,9 +46,6 @@ def detect_collision(x, y):
 
 
 def fix_collision(x, y, dx, dy, fl=2):
-    # we've designed this func as a modified version of those
-    # used by "Diddi and Eli" and "Abandon the ship!", along with
-    # "detect_collision" (which went through several modifications too)
     abs_dx = abs(dx)
     abs_dy = abs(dy)
     sign = fl if dx > 0 else -(fl)
@@ -208,8 +206,7 @@ class Main:
             pretty_text(pdata[1], 0, 120)
 
     def _clicking_an_arrow(self, keys: list):
-        # checks if any of a given key list has
-        # been pressed, for internal purposes.
+        # checks if any of a given key list has been pressed
         for k in keys:
             if pyxel.btn(k):
                 return True
