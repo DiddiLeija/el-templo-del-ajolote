@@ -52,11 +52,11 @@
     },
     "stories": [
         [
-            ["set", 1, 4, 1016, 952],
+            ["set", 1, 4, 1016, 950],
             ["dialog", "axel", "Oh, ¡hola, abue!", 0],
-            ["dialog", "abue", "Hola Axel... ¿Podrías por favor\nir a la tienda?", 1],
-            ["task", [1016, 968]],
-            ["set", 0, 2, 1016, 992]
+            ["dialog", "abue", "Hola Axel... ¿Podrias por favor\nir a la tienda?", 0],
+            ["task", [1016, 968], "Sal de la casa."],
+            ["set", 0, 2, 1016, 974]
         ]
     ]
 }

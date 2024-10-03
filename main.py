@@ -63,42 +63,61 @@ def fix_collision(x, y, dx, dy, fl=2):
     return x, y
 
 
+def pretty_text(txt, x, y, col1=1, col2=7):
+    "draw a pretty text with customizable colors."
+    # TODO: Unicode characters are not working, at least on certain
+    # devices. This affects the rendering of non-ASCII languages.
+    # Here, I'm using Spanish, so it doesn't work on my main device.
+    # TODO: determine if this is a Pyxel issue or my problem...
+    pyxel.text(x, y, txt, col1)
+    pyxel.text(x+1, y, txt, col2)
+
+
 class Main:
     #####  MAIN CLASS  #####
 
     def __init__(self):
         self.x = 1016  # 127, 124 -- x8?
         self.y = 992
-        self.player_aspect = ["default", 0]
+        self.player_aspect = ["up", 0]
         self.stage = "o"
         self.open_mode = False
         self.intro = True
         self.plot_index = 0
+        self.should_update_player = True
         pyxel.run(self.update, self.draw)
 
     def update(self):
         if self.intro:
             self.update_story(0)
+            if self.plot_index < 0:
+                # finish flag
+                self.intro = False
+                return
         self.update_player()
         if not self.open_mode:
             self.update_locked()
 
     def draw(self):
         self.draw_general()
+        if self.intro:
+            self.draw_story(0)
 
     def draw_general(self):
         draw_a, draw_b = BACKGROUND_1, BACKGROUND_2  # TODO: use BACKGROUND_* directly?
         pyxel.cls(0)
-        pyxel.camera()  # camera fix 1
+        pyxel.camera()  # global camera fix
         draw_x = self.x-448 // 8
         draw_y = self.y-448 // 8
         pyxel.bltm(0, 0, draw_a, draw_x, draw_y, 128, 128)  # background
-        pyxel.camera(draw_x, draw_y)  # camera fix 2
+        pyxel.camera(draw_x, draw_y)  # camera fix 1
         self.draw_player()
-        pyxel.camera()  # camera fix 3
+        pyxel.camera()  # camera fix 2
         pyxel.bltm(0, 0, draw_b, draw_x, draw_y, 128, 128, 0)  # backgound additions
 
     def update_player(self):
+        if not self.should_update_player:
+            return
         # movement checks
         dx, dy = 0, 0
         if pyxel.btn(pyxel.KEY_DOWN):
@@ -137,12 +156,56 @@ class Main:
         "tell a story."
         global BACKGROUND_1, BACKGROUND_2
         plot = GAME_SETUP["stories"][id]
+        if self.plot_index >= len(plot):
+            self.plot_index = -1  # a flag that means the story is over
+            return
         ptype = plot[self.plot_index][0]
         pdata = plot[self.plot_index][1:]
         if ptype == "set":
             # set the player to a certain position
             BACKGROUND_1, BACKGROUND_2, self.x, self.y = pdata[0], pdata[1], pdata[2], pdata[3]
             self.plot_index += 1
+        elif ptype == "dialog":
+            # let's chat!
+            if self.should_update_player:
+                self.should_update_player = False
+            if pyxel.btnp(pyxel.KEY_SPACE):
+                # TODO: include keypad space key too
+                self.plot_index += 1
+                self.should_update_player = True
+        elif ptype == "task":
+            # you must get somewhere.
+            if pdata[0][0] in range(self.x, self.x + 17):
+                if pdata[0][1] in range(self.y, self.y + 17):
+                    self.plot_index += 1
+    
+    def draw_story(self, id=0):
+        global BACKGROUND_1, BACKGROUND_2
+        plot = GAME_SETUP["stories"][id]
+        if self.plot_index >= len(plot):
+            # no direct fixes to the variable -- update_story() should do it
+            return
+        ptype = plot[self.plot_index][0]
+        pdata = plot[self.plot_index][1:]
+        if ptype == "set":
+            pass  # NOTE: we're doin' nothing now... but... should we? ¯\_(ツ)_/¯
+        elif ptype == "dialog":
+            pyxel.rect(111, 74, 16, 16, 0)
+            pyxel.rectb(110, 73, 18, 18, 7)
+            pyxel.rect(0, 91, 128, 37, 0)
+            pyxel.rect(0, 90, 128, 1, 7)
+            # draw the "skip" text and the dialog
+            if pyxel.frame_count % 2 == 0:
+                # ticking every 2 frames
+                pretty_text(">", 119, 120)
+            pretty_text(pdata[1], 0, 92)
+            # add a close-up of the talking character
+            character_img = GAME_SETUP["images"][pdata[0]]["chat"][pdata[2]]
+            pyxel.blt(111, 74, 1, character_img[0], character_img[1], 16, 16, 0)
+        elif ptype == "task":
+            pyxel.rect(0, 119, 128, 8, 0)
+            pyxel.rect(0, 118, 128, 1, 7)
+            pretty_text(pdata[1], 0, 120)
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has
