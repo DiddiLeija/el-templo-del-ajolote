@@ -77,7 +77,7 @@ class Main:
     def __init__(self):
         self.x = 1016  # 127, 124 -- x8?
         self.y = 992
-        self.player_aspect = ["up", 0]
+        self.player_aspect = ["default", 0]
         self.stage = "o"
         self.open_mode = False
         self.intro = True
@@ -93,6 +93,9 @@ class Main:
                 self.intro = False
                 return
         self.update_player()
+        if self.should_update_player is None:
+            # None means here "one time negative", so we make it positive now.
+            self.should_update_player = True
         if not self.open_mode:
             self.update_locked()
 
@@ -194,7 +197,12 @@ class Main:
             if pdata[0][0] in range(self.x + 2, self.x + 15):
                 if pdata[0][1] in range(self.y + 2, self.y + 15):
                     self.plot_index += 1
-    
+        elif ptype == "set_facing":
+            # change Axel's facing.
+            self.player_aspect[0] = pdata[0]
+            self.plot_index += 1
+            self.should_update_player = None  # small trick!
+
     def draw_story(self, id=0):
         global BACKGROUND_1, BACKGROUND_2
         plot = GAME_SETUP["stories"][id]
@@ -203,7 +211,7 @@ class Main:
             return
         ptype = plot[self.plot_index][0]
         pdata = plot[self.plot_index][1:]
-        if ptype == "set":
+        if ptype in ("set", "set_facing"):
             pass  # NOTE: we're doin' nothing now... but... should we? ¯\_(ツ)_/¯
         elif ptype == "dialog":
             pyxel.rect(111, 74, 16, 16, 0)
@@ -219,7 +227,7 @@ class Main:
             character_img = GAME_SETUP["images"][pdata[0]]["chat"][pdata[2]]
             pyxel.blt(111, 74, 1, character_img[0], character_img[1], 16, 16, 0)
         elif ptype == "task":
-            pyxel.rect(0, 119, 128, 8, 0)
+            pyxel.rect(0, 119, 128, 9, 0)
             pyxel.rect(0, 118, 128, 1, 7)
             pretty_text(pdata[1], 0, 120)
 

@@ -60,11 +60,24 @@
     },
     "stories": [
         [
+            ["set_facing", "up"],
             ["set", 1, 4, 1016, 950],
-            ["dialog", "axel", "Oh, ¡hola, abue!", 0],
-            ["dialog", "abue", "Hola Axel... ¿Podrias por favor\nir a la tienda?", 0],
+            ["dialog", "axel", "Hola, abue!\nSe te ofrece algo?", 0],
+            ["dialog", "abue", "Hola Axel... De hecho, si. Hoy\npienso hacer un rico pozole,\npero no tengo maiz.", 0],
+            ["dialog", "abue", "Puedes ir a la tienda y comprar\nmedio kilo de maiz? ...", 0],
+            ["dialog", "axel", "Sip! Enseguida vuelvo.", 2],
             ["task", [1016, 968], "Sal de la casa."],
-            ["set", 0, 2, 1016, 974]
+            ["set", 0, 2, 1016, 976],
+            ["task", [1128, 980], "Ve a la tienda de Don Xolo."],
+            ["set_facing", "up"],
+            ["dialog", "axel", "Hola, don Xolo!\nMe vende medio kilo de maiz?", 0],
+            ["dialog", "xolo1", "Si, Axel! Ahora mismo te lo\ntraigo.", 1],
+            ["dialog", "xolo1", "Aqui tienes... Oye, y viste lo\nque ha ocurrido en la plaza?", 1],
+            ["dialog", "axel", "No... que pasa?", 3],
+            ["dialog", "xolo1", "Un misterioso agujero se abrio\nen la noche. Alguien debe\ninvestigar por que.", 0],
+            ["dialog", "axel", "Yo iria con gusto... Pero debo\nlevarle esto a mi abuelita.", 4],
+            ["dialog", "xolo1", "Sabes algo? Hagamos un trato.\nYo le llevo el maiz a tu abuela\ny tu vas a revisar ese agujero.", 1],
+            ["dialog", "axel", "En serio? Gracias!", 1]
         ]
     ],
     "npc_locations": [
@@ -75,10 +88,11 @@
             ["flower_pot", "early2", 1072, 1002],
             ["flower_pot", "white", 1080, 1002],
             ["flower_pot", "early", 1088, 1002],
-            ["flower_pot", "red", 1096, 1002]
+            ["flower_pot", "red", 1096, 1002],
+            ["xolo1", "default", 1126, 954]
         ],
         [
-            ["abue", "default", 1016, 930]
+            ["abue", "default", 1016, 928]
         ]
     ]
 }
