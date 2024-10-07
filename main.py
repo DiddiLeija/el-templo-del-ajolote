@@ -200,6 +200,7 @@ class Main:
         elif ptype == "set_facing":
             # change Axel's facing.
             self.player_aspect[0] = pdata[0]
+            self.player_aspect[1] = 0  # we don't assume Axel is moving
             self.plot_index += 1
             self.should_update_player = None  # small trick!
 
@@ -229,7 +230,7 @@ class Main:
         elif ptype == "task":
             pyxel.rect(0, 119, 128, 9, 0)
             pyxel.rect(0, 118, 128, 1, 7)
-            pretty_text(pdata[1], 0, 120)
+            pretty_text(pdata[1], 0, 120, col2=9)
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has been pressed
