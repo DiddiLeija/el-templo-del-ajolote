@@ -117,6 +117,7 @@
             ["dialog", "xolo2", "Ademas, cuidate de los monstruos\ny las iguanas gigantes, no\ndejes que te alcancen!", 1],
             ["dialog", "xolo2", "Te veo del otro lado!", 0],
             ["task", [1280, 688], "Encuentra una ruta para salir\ndel Templo del Ajolote."],
+            ["set_facing", "up"],
             ["dialog", "xolo2", "Ey! Llegaste!", 0]
         ]
     ],
@@ -124,11 +125,11 @@
         "0": [
             ["flower_pot", "white", 995, 968],
             ["flower_pot", "red", 1037, 968],
-            ["flower_pot", "early2", 1064, 1010],
-            ["flower_pot", "early2", 1072, 1010],
-            ["flower_pot", "white", 1080, 1010],
-            ["flower_pot", "early", 1088, 1010],
-            ["flower_pot", "red", 1096, 1010],
+            ["flower_pot", "red", 1056, 1018],
+            ["flower_pot", "early2", 1064, 1018],
+            ["flower_pot", "early2", 1072, 1018],
+            ["flower_pot", "white", 1080, 1018],
+            ["flower_pot", "early", 1088, 1018],
             ["xolo1", "default", 1126, 954],
             ["cris", "default", 1192, 832]
         ],
