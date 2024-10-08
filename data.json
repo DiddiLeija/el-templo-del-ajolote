@@ -7,7 +7,8 @@
         [48, 16],
         [56, 16],
         [48, 24],
-        [56, 24]
+        [56, 24],
+        [56, 32]
     ],
     "images": {
         "axel": {
@@ -66,9 +67,9 @@
             ["dialog", "abue", "Hola Axel... De hecho, si. Hoy\npienso hacer un rico pozole,\npero no tengo maiz.", 0],
             ["dialog", "abue", "Puedes ir a la tienda y comprar\nmedio kilo de maiz? ...", 0],
             ["dialog", "axel", "Sip! Enseguida vuelvo.", 2],
-            ["task", [1016, 968], "Sal de la casa"],
+            ["task", [1016, 968], "Sal de la casa para ir a la\ntienda."],
             ["set", 0, 2, 1016, 976],
-            ["task", [1128, 980], "Ve a la tienda de Don Xolo"],
+            ["task", [1128, 980], "Ve a la tienda de Don Xolo,\nsobre la misma calle."],
             ["set_facing", "up"],
             ["dialog", "axel", "Hola, don Xolo!\nMe vende medio kilo de maiz?", 0],
             ["dialog", "xolo1", "Si, Axel! Ahora mismo te lo\ntraigo.", 1],
@@ -79,7 +80,7 @@
             ["dialog", "axel", "Yo iria con gusto... Pero debo\nlevarle esto a mi abuelita.", 4],
             ["dialog", "xolo1", "Sabes? Hagamos un trato. Yo le\nllevo el maiz a tu abuela y\ntu vas a revisar ese agujero.", 1],
             ["dialog", "axel", "En serio? Gracias!", 1],
-            ["task", [1176, 834], "Ve por la avenida hacia el Angel"],
+            ["task", [1176, 834], "Ve por la avenida hacia el Angel\nde la Independencia."],
             ["set_facing", "right"],
             ["dialog", "cris", "Hola, Axel! Viste el gran\nagujero tras la estatua del\nAngel?", 1],
             ["dialog", "axel", "Si, profesora! De hecho, vine a\nver si puedo ayudar.", 0],
@@ -90,7 +91,10 @@
             ["dialog", "axel", "...", 1],
             ["dialog", "cris", "No temas! Si la nota no se\nequivoca, las grietas conducen\nal Templo del Ajolote.", 0],
             ["dialog", "axel", "Esa piramide azteca, que NADIE\nha encontrado?", 3],
-            ["dialog", "cris", "Asi es! Tranquilo, creo que no\ntienes nada que temer.", 0]
+            ["dialog", "cris", "Asi es! Tranquilo, creo que no\ntienes nada que temer.", 0],
+            ["dialog", "axel", "Ok... OK! Voy a entrar.", 2],
+            ["dialog", "cris", "Excelente! Te esperamos de este\nlado. Mucho exito.", 0],
+            ["set_facing", "left"]
         ]
     ],
     "npc_locations": [

@@ -18,9 +18,16 @@ def get_data(fname: str) -> dict:
 
 
 GAME_SETUP = get_data("data.json")
-BACKGROUND_1 = 0
-BACKGROUND_2 = 2
+BACKGROUND_1 = 1
+BACKGROUND_2 = 4
 
+# BACKGROUND_* data
+# =================
+# 1, 4 - indoors, overworld
+# 0, 2 - outdoors, overworld
+# 3, 3 - locked-mode fences (?)
+# 5, 6 - underworld
+# 7 - wildcard (?)
 
 def get_tile(tile_x, tile_y, to_list=False):
     if to_list:
@@ -228,9 +235,9 @@ class Main:
             character_img = GAME_SETUP["images"][pdata[0]]["chat"][pdata[2]]
             pyxel.blt(111, 74, 1, character_img[0], character_img[1], 16, 16, 0)
         elif ptype == "task":
-            pyxel.rect(0, 119, 128, 9, 0)
-            pyxel.rect(0, 118, 128, 1, 7)
-            pretty_text(pdata[1], 0, 120, col2=9)
+            pyxel.rect(0, 111, 128, 17, 0)
+            pyxel.rect(0, 110, 128, 1, 7)
+            pretty_text(pdata[1], 0, 112, col2=9)
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has been pressed
