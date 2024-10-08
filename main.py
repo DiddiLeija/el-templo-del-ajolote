@@ -161,10 +161,10 @@ class Main:
         if self.player_aspect[0] != "default":
             img_pick = img_pick[self.player_aspect[1]]
         pyxel.blt(self.x, self.y, 1, img_pick[0], img_pick[1], 16, 16, 0)
-    
+
     def draw_npc(self):
         # draw all the non-playable-characters available.
-        npcs = GAME_SETUP["npc_locations"][BACKGROUND_1]  # TODO: Make sure this works anytime!
+        npcs = GAME_SETUP["npc_locations"][str(BACKGROUND_1)]  # TODO: Make sure this works anytime!
         for c in npcs:
             sz = 0
             if c[0] in GAME_SETUP["images"].keys():
@@ -229,8 +229,9 @@ class Main:
         if ptype in ("set", "set_facing"):
             pass  # NOTE: we're doin' nothing now... but... should we? ¯\_(ツ)_/¯
         elif ptype == "dialog":
-            pyxel.rect(111, 74, 16, 16, 0)
-            pyxel.rectb(110, 73, 18, 18, 7)
+            if pdata[0] is not None:
+                pyxel.rect(111, 74, 16, 16, 0)
+                pyxel.rectb(110, 73, 18, 18, 7)
             pyxel.rect(0, 91, 128, 37, 0)
             pyxel.rect(0, 90, 128, 1, 7)
             # draw the "skip" text and the dialog
@@ -239,8 +240,9 @@ class Main:
                 pretty_text(">", 119, 120)
             pretty_text(pdata[1], 0, 92)
             # add a close-up of the talking character
-            character_img = GAME_SETUP["images"][pdata[0]]["chat"][pdata[2]]
-            pyxel.blt(111, 74, 1, character_img[0], character_img[1], 16, 16, 0)
+            if pdata[0] is not None:
+                character_img = GAME_SETUP["images"][pdata[0]]["chat"][pdata[2]]
+                pyxel.blt(111, 74, 1, character_img[0], character_img[1], 16, 16, 0)
         elif ptype == "task":
             # point to the desired location
             if pyxel.frame_count % 2 == 0 or pyxel.frame_count % 3 == 0:
@@ -252,11 +254,11 @@ class Main:
             pyxel.rect(0, 111, 128, 17, 0)
             pyxel.rect(0, 110, 128, 1, 7)
             pretty_text(pdata[1], 0, 112, col2=9)
-    
+
     def update_menu(self):
         if pyxel.btnp(pyxel.KEY_SPACE):
             self.menu = None
-    
+
     def draw_menu(self):
         if self.menu is None:
             self.menu = False  # MAGIC!!

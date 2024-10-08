@@ -8,6 +8,7 @@
         [56, 16],
         [48, 24],
         [56, 24],
+        [48, 32],
         [56, 32]
     ],
     "images": {
@@ -67,6 +68,7 @@
         [
             ["set_facing", "up"],
             ["set", 1, 4, 1016, 950],
+            ["dialog", null, "Axel y su abuela viven en Ciudad\nde Mexico, donde viven muy\ntranquilamente...", null],
             ["dialog", "axel", "Hola, abue!\nSe te ofrece algo?", 0],
             ["dialog", "abue", "Hola Axel... De hecho, si. Hoy\npienso hacer un rico pozole,\npero no tengo maiz.", 0],
             ["dialog", "abue", "Puedes ir a la tienda y comprar\nmedio kilo de maiz? ...", 0],
@@ -99,11 +101,27 @@
             ["dialog", "axel", "Ok... OK! Voy a entrar.", 2],
             ["dialog", "cris", "Excelente! Te esperamos de este\nlado. Mucho exito.", 0],
             ["set_facing", "left"],
-            ["task", [1144, 820], "Entra al portal purpura."]
+            ["task", [1144, 820], "Entra al portal purpura."],
+            ["set", 5, 6, 1145, 818],
+            ["set_facing", "down"],
+            ["dialog", null, "...", null],
+            ["dialog", "axel", "Eh...", 3],
+            ["dialog", "axel", "EH?? Donde estoy?", 1],
+            ["dialog", "xolo2", "GRRRRR...", 1],
+            ["dialog", "axel", "Que... que fue eso?", 4],
+            ["dialog", "xolo2", "Soy Acalan, el Xoloitzcuintle.\nVoy a guiarte en tu ruta por\nel Templo del Ajolote...", 0],
+            ["dialog", "xolo2", "No puedes verme, porque yo ya\nestoy al otro lado del Templo.", 0],
+            ["dialog", "axel", "Crei que solo los Ajolotes\npodemos estar aqui...", 3],
+            ["dialog", "xolo2", "A este templo, si... Pero\nestamos en el Inframundo. Los\nXolos podemos estar aqui.", 0],
+            ["dialog", "xolo2", "Como sea... Para sellar las\nbrechas entre los mundos, debes\ncruzar el Templo y reactivarlo.", 0],
+            ["dialog", "xolo2", "Ademas, cuidate de los monstruos\ny las iguanas gigantes, no\ndejes que te alcancen!", 1],
+            ["dialog", "xolo2", "Te veo del otro lado!", 0],
+            ["task", [1280, 688], "Encuentra una ruta para salir\ndel Templo del Ajolote."],
+            ["dialog", "xolo2", "Ey! Llegaste!", 0]
         ]
     ],
-    "npc_locations": [
-        [
+    "npc_locations": {
+        "0": [
             ["flower_pot", "white", 995, 968],
             ["flower_pot", "red", 1037, 968],
             ["flower_pot", "early2", 1064, 1010],
@@ -114,8 +132,11 @@
             ["xolo1", "default", 1126, 954],
             ["cris", "default", 1192, 832]
         ],
-        [
+        "1": [
             ["abue", "default", 1016, 928]
+        ],
+        "5": [
+            ["xolo2", "default", 1280, 656]
         ]
-    ]
+    }
 }
