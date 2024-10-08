@@ -2,7 +2,7 @@ import io, json
 
 import pyxel
 
-VERSION = "0.1.0pre1"
+VERSION = "0.1.0"
 
 
 def get_data(fname: str) -> dict:
