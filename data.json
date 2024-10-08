@@ -49,6 +49,10 @@
         "miguel": {
             "default": [0, 112],
             "chat": [[16, 112]]
+        },
+        "alert": {
+            "default": null,
+            "chat": [[32, 112], [48, 112]]
         }
     },
     "images-8": {
@@ -94,7 +98,8 @@
             ["dialog", "cris", "Asi es! Tranquilo, creo que no\ntienes nada que temer.", 0],
             ["dialog", "axel", "Ok... OK! Voy a entrar.", 2],
             ["dialog", "cris", "Excelente! Te esperamos de este\nlado. Mucho exito.", 0],
-            ["set_facing", "left"]
+            ["set_facing", "left"],
+            ["task", [1144, 820], "Entra al portal purpura."]
         ]
     ],
     "npc_locations": [

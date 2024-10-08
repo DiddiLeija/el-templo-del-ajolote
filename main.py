@@ -242,6 +242,13 @@ class Main:
             character_img = GAME_SETUP["images"][pdata[0]]["chat"][pdata[2]]
             pyxel.blt(111, 74, 1, character_img[0], character_img[1], 16, 16, 0)
         elif ptype == "task":
+            # point to the desired location
+            if pyxel.frame_count % 2 == 0 or pyxel.frame_count % 3 == 0:
+                pyxel.camera(self.x-448 // 8, self.y-448 // 8)  # borrowed from draw_general()
+                pyxel.circb(pdata[0][0]+4, pdata[0][1]+4, 4, 14)
+                pyxel.circb(pdata[0][0]+5, pdata[0][1]+4, 4, 7)
+                pyxel.camera()
+            # make the task verbose
             pyxel.rect(0, 111, 128, 17, 0)
             pyxel.rect(0, 110, 128, 1, 7)
             pretty_text(pdata[1], 0, 112, col2=9)
