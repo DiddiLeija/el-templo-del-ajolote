@@ -87,12 +87,16 @@ class Main:
         self.player_aspect = ["default", 0]
         self.stage = "o"
         self.open_mode = False
+        self.menu = True
         self.intro = True
         self.plot_index = 0
         self.should_update_player = True
         pyxel.run(self.update, self.draw)
 
     def update(self):
+        if self.menu:
+            self.update_menu()
+            return
         if self.intro:
             self.update_story(0)
             if self.plot_index < 0:
@@ -107,6 +111,9 @@ class Main:
             self.update_locked()
 
     def draw(self):
+        if self.menu is not False:
+            self.draw_menu()
+            return
         self.draw_general()
         if self.intro:
             self.draw_story(0)
@@ -238,6 +245,20 @@ class Main:
             pyxel.rect(0, 111, 128, 17, 0)
             pyxel.rect(0, 110, 128, 1, 7)
             pretty_text(pdata[1], 0, 112, col2=9)
+    
+    def update_menu(self):
+        if pyxel.btnp(pyxel.KEY_SPACE):
+            self.menu = None
+    
+    def draw_menu(self):
+        if self.menu is None:
+            self.menu = False  # MAGIC!!
+        pyxel.cls(0)
+        pretty_text("<<  El Templo del Ajolote  >>", 6, 8, col1=2, col2=15)
+        pretty_text("Mover: Flechas", 25, 40, col2=13)
+        pretty_text("Aceptar: Espacio", 25, 48, col2=13)
+        pretty_text("Salir: ESC", 25, 56, col2=13)
+        pretty_text("Presiona Espacio para comenzar\n     o ESC para abandonar", 4, 90)
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has been pressed
