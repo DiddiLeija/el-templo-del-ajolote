@@ -78,17 +78,41 @@ def pretty_text(txt, x, y, col1=1, col2=7):
     pyxel.text(x+1, y, txt, col2)
 
 
+class MobBase:
+    "Mob base."
+    vertical = False
+    size = 16
+    name = ""
+    imgbank = 1
+    imgtype = ""
+    aspect = "default"
+
+    def __init__(self, x, y, vertical):
+        self.x, self.y = x, y
+        self.vertical = vertical
+        self.imgtype = "images" if self.size > 8 else "images-8"  # TODO: get a stable method?
+
+
+class Monster(MobBase):
+    # Mob type 1 -- monster
+    size = 8
+    name = "monster"
+
+
+class Iguana(MobBase):
+    # Mob type 2 -- iguana
+    name = "iguana"
+
+
 class Main:
     #####  MAIN CLASS  #####
 
     def __init__(self):
-        self.x = 1016  # 127, 124 -- x8?
-        self.y = 992
+        self.x, self.y = 1016, 992  # 127, 124 -- x8?
         self.player_aspect = ["default", 0]
         self.stage = "o"
         self.open_mode = False
         self.menu = True
-        self.intro = True
         self.plot_index = 0
         self.should_update_player = True
         pyxel.run(self.update, self.draw)
@@ -97,25 +121,26 @@ class Main:
         if self.menu:
             self.update_menu()
             return
-        if self.intro:
+        if not self.open_mode:
             self.update_story(0)
             if self.plot_index < 0:
                 # finish flag
-                self.intro = False
+                self.open_mode = False
                 return
+        else:
+            # run extra feats through "open mode"
+            self.update_open()
         self.update_player()
         if self.should_update_player is None:
             # None means here "one time negative", so we make it positive now.
             self.should_update_player = True
-        if not self.open_mode:
-            self.update_locked()
 
     def draw(self):
         if self.menu is not False:
             self.draw_menu()
             return
         self.draw_general()
-        if self.intro:
+        if not self.open_mode:
             self.draw_story(0)
 
     def draw_general(self):
@@ -178,9 +203,6 @@ class Main:
                 bnk = 0 if sz == 8 else 1
                 npc_u, npc_v = GAME_SETUP[tp][c[0]][c[1]]
                 pyxel.blt(c[2], c[3], bnk, npc_u, npc_v, sz, sz, 0)
-
-    def update_locked(self):
-        "main mission, other tasks are locked."
 
     def update_open(self):
         "once the main mission's done, open tasks are unlocked."
