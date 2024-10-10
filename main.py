@@ -98,19 +98,16 @@ class MobBase:
         self.imgtype = "images" if self.size > 8 else "images-8"  # TODO: get a stable method?
 
     def update(self):
-        # print("Updating mob", self, type(self).__name__)
         if pyxel.frame_count % self.update_sleeper != 0:
             return
         dx, dy = 0, 0
-        self._check_sign()
         if self.vertical:
             dy = self.speed * self.sign
             self.aspect = "down" if dy > 0 else "up"
         else:
             dx = self.speed * self.sign
             self.aspect = "right" if dx > 0 else "left"
-        # if fix_collision(self.x, self.y, dx, dy) != (self.x, self.y):
-        #     print("moved")
+        self._check_sign()
         self.x, self.y = fix_collision(self.x, self.y, dx, dy)
 
     def draw(self):
@@ -121,14 +118,15 @@ class MobBase:
 
     def _check_sign(self):
         # TODO: find a more proper method?
+        # FIXME: this is not working on 8x8-sized mobs
         cx, cy = self.x - 1, self.y - 1
         if self.vertical:
             if self.sign > 0:
-                cy += self.size
+                cy += 4 if self.size > 8 else 2  # FIXME: 2 is not the lucky number!!!
             cx += 1
         else:
             if self.sign > 0:
-                cx += self.size
+                cx += 4 if self.size > 8 else 2
             cy += 1
         if detect_collision(cx, cy):
             self.sign *= -1
