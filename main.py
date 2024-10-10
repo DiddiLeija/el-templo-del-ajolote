@@ -88,6 +88,8 @@ class MobBase:
     aspect = "default"
     harmful = True
     speed = 1
+    colkey = 0  # in case we don't use the traditional colkey (0)
+    update_sleeper = 1  # only update if pyxel.frame_count % self.update_sleeper == 0... B)
 
     def __init__(self, x, y, vertical):
         self.x, self.y = x, y
@@ -95,10 +97,15 @@ class MobBase:
         self.imgtype = "images" if self.size > 8 else "images-8"  # TODO: get a stable method?
 
     def update(self):
-        pass
+        if pyxel.frame_count % self.update_sleeper != 0:
+            return
+        # TODO: fixme! ...
 
     def draw(self):
-        pass
+        img = GAME_SETUP[self.imgtype][self.name][self.aspect]
+        if self.aspect != "default":
+            img = img[0] if pyxel.frame_count % 2 == 0 else img[1]
+        pyxel.blt(self.x, self.y, self.imgbank, img[0], img[1], self.size, self.size, self.colkey)
 
 
 class Monster(MobBase):
@@ -108,12 +115,13 @@ class Monster(MobBase):
 
 
 class MonsterFast(Monster):
-    speed = 3
+    speed = 2
 
 
 class Iguana(MobBase):
     # Mob type 2 -- iguana
     name = "iguana"
+    update_sleeper = 2  # so the Iguana is the slowest mob ;)
 
 
 class Main:
@@ -132,6 +140,7 @@ class Main:
         self.menu = True
         self.plot_index = 0
         self.should_update_player = True
+        self.mob_map = self._generate_mob_map()
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -142,11 +151,13 @@ class Main:
             self.update_story(0)
             if self.plot_index < 0:
                 # finish flag
-                self.open_mode = False
+                self.open_mode = True
                 return
         else:
             # run extra feats through "open mode"
             self.update_open()
+        for m in self.mob_map[str(BACKGROUND_1)]:
+            m.update()
         self.update_player()
         if self.should_update_player is None:
             # None means here "one time negative", so we make it positive now.
@@ -168,6 +179,8 @@ class Main:
         draw_y = self.y-448 // 8
         pyxel.bltm(0, 0, draw_a, draw_x, draw_y, 128, 128)  # background
         pyxel.camera(draw_x, draw_y)  # camera fix 1
+        for m in self.mob_map[str(BACKGROUND_1)]:
+            m.draw()
         self.draw_player()
         self.draw_npc()
         pyxel.camera()  # camera fix 2
@@ -259,6 +272,7 @@ class Main:
         elif ptype == "respawn_point":
             # set the respawn point for Axel.
             self.respawn_coords = pdata[0]
+            self.plot_index += 1
 
     def draw_story(self, id=0):
         global BACKGROUND_1, BACKGROUND_2
@@ -311,12 +325,27 @@ class Main:
         pretty_text("Aceptar: Espacio", 25, 48, col2=13)
         pretty_text("Salir: ESC", 25, 56, col2=13)
         pretty_text("Presiona Espacio para comenzar\n     o ESC para abandonar", 4, 90)
-    
+
     def _respawn_player(self):
         # return the character to the right place
         global BACKGROUND_1, BACKGROUND_2
         self.x, self.y = self.respawn_coords[0], self.respawn_coords[1]
         BACKGROUND_1, BACKGROUND_2 = self.respawn_coords[2], self.respawn_coords[3]
+
+    def _generate_mob_map(self):
+        # deep-level generation of mobs.
+        mob_template = GAME_SETUP["mob_locations"]
+        final = dict()
+        for l in mob_template.keys():
+            final[l] = list()
+            for m in mob_template[l]:
+                if m[2] == "iguana":
+                    final[l].append(Iguana(m[0], m[1], m[3]))
+                elif m[2] == "monster":
+                    final[l].append(Monster(m[0], m[1], m[3]))
+                elif m[2] == "monster-fast":
+                    final[l].append(MonsterFast(m[0], m[1], m[3]))
+        return final
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has been pressed
