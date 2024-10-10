@@ -70,7 +70,7 @@ def fix_collision(x, y, dx, dy, fl=2):
 
 def pretty_text(txt, x, y, col1=1, col2=7):
     "draw a pretty text with customizable colors."
-    # TODO: Unicode characters are not working, at least on certain
+    # FIXME: Unicode characters are not working, at least on certain
     # devices. This affects the rendering of non-ASCII languages.
     # Here, I'm using Spanish, so it doesn't work on my main device.
     # TODO: determine if this is a Pyxel issue or my problem...
@@ -95,7 +95,7 @@ class MobBase:
     def __init__(self, x, y, vertical):
         self.x, self.y = x, y
         self.vertical = vertical
-        self.imgtype = "images" if self.size > 8 else "images-8"  # TODO: get a stable method?
+        self.imgtype = "images" if self.size > 8 else "images-8"
 
     def update(self):
         if pyxel.frame_count % self.update_sleeper != 0:
@@ -117,12 +117,11 @@ class MobBase:
         pyxel.blt(self.x, self.y, self.imgbank, img[0], img[1], self.size, self.size, self.colkey)
 
     def _check_sign(self):
-        # TODO: find a more proper method?
         # FIXME: this is not working on 8x8-sized mobs
         cx, cy = self.x - 1, self.y - 1
         if self.vertical:
             if self.sign > 0:
-                cy += 4 if self.size > 8 else 2  # FIXME: 2 is not the lucky number!!!
+                cy += 4 if self.size > 8 else 2  # FIXME: 2 is not working!?
             cx += 1
         else:
             if self.sign > 0:
@@ -133,23 +132,27 @@ class MobBase:
 
 
 class Monster(MobBase):
-    # Mob type 1 -- monster
+    # undocumented, removed from final gameplay
     size = 8
     name = "monster"
 
 
 class MonsterFast(Monster):
+    # undocumented, removed from final gameplay
     speed = 2
 
 
 class Iguana(MobBase):
-    # Mob type 2 -- iguana
     name = "iguana"
     update_sleeper = 2  # so the Iguana is the slowest mob ;)
 
 
+class IguanaFast(Iguana):
+    update_sleeper = 1
+
+
 class IguanaSlow(Iguana):
-    update_sleeper = 4  # much, MUCH slower
+    update_sleeper = 4  # much, MUCH slower iguana
 
 
 class Main:
@@ -375,6 +378,8 @@ class Main:
                     final[l].append(MonsterFast(m[0], m[1], m[3]))
                 elif m[2] == "iguana-slow":
                     final[l].append(IguanaSlow(m[0], m[1], m[3]))
+                elif m[2] == "iguana-fast":
+                    final[l].append(IguanaFast(m[0], m[1], m[3]))
         return final
 
     def _clicking_an_arrow(self, keys: list):
