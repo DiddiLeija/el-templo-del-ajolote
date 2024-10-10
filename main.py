@@ -25,8 +25,8 @@ BACKGROUND_2 = 4
 # =================
 # 1, 4 - indoors, overworld
 # 0, 2 - outdoors, overworld
-# 3, 3 - locked-mode fences (?)
 # 5, 6 - underworld
+# 3 - locked-mode fences (?)
 # 7 - wildcard (?)
 
 def get_tile(tile_x, tile_y, to_list=False):
@@ -86,11 +86,19 @@ class MobBase:
     imgbank = 1
     imgtype = ""
     aspect = "default"
+    harmful = True
+    speed = 1
 
     def __init__(self, x, y, vertical):
         self.x, self.y = x, y
         self.vertical = vertical
         self.imgtype = "images" if self.size > 8 else "images-8"  # TODO: get a stable method?
+
+    def update(self):
+        pass
+
+    def draw(self):
+        pass
 
 
 class Monster(MobBase):
@@ -99,16 +107,25 @@ class Monster(MobBase):
     name = "monster"
 
 
+class MonsterFast(Monster):
+    speed = 3
+
+
 class Iguana(MobBase):
     # Mob type 2 -- iguana
     name = "iguana"
 
 
 class Main:
+    """
+    ########################
     #####  MAIN CLASS  #####
+    ########################
+    """
 
     def __init__(self):
         self.x, self.y = 1016, 992  # 127, 124 -- x8?
+        self.respawn_coords = [0, 0, 0, 2]  # [x, y, BACKGROUND_*] -- modified during the game
         self.player_aspect = ["default", 0]
         self.stage = "o"
         self.open_mode = False
@@ -239,6 +256,9 @@ class Main:
             self.player_aspect[1] = 0  # we don't assume Axel is moving
             self.plot_index += 1
             self.should_update_player = None  # small trick!
+        elif ptype == "respawn_point":
+            # set the respawn point for Axel.
+            self.respawn_coords = pdata[0]
 
     def draw_story(self, id=0):
         global BACKGROUND_1, BACKGROUND_2
@@ -248,7 +268,7 @@ class Main:
             return
         ptype = plot[self.plot_index][0]
         pdata = plot[self.plot_index][1:]
-        if ptype in ("set", "set_facing"):
+        if ptype in ("set", "set_facing", "respawn_point"):
             pass  # NOTE: we're doin' nothing now... but... should we? ¯\_(ツ)_/¯
         elif ptype == "dialog":
             if pdata[0] is not None:
@@ -278,6 +298,7 @@ class Main:
             pretty_text(pdata[1], 0, 112, col2=9)
 
     def update_menu(self):
+        # nothing happening here at all.
         if pyxel.btnp(pyxel.KEY_SPACE):
             self.menu = None
 
@@ -290,6 +311,12 @@ class Main:
         pretty_text("Aceptar: Espacio", 25, 48, col2=13)
         pretty_text("Salir: ESC", 25, 56, col2=13)
         pretty_text("Presiona Espacio para comenzar\n     o ESC para abandonar", 4, 90)
+    
+    def _respawn_player(self):
+        # return the character to the right place
+        global BACKGROUND_1, BACKGROUND_2
+        self.x, self.y = self.respawn_coords[0], self.respawn_coords[1]
+        BACKGROUND_1, BACKGROUND_2 = self.respawn_coords[2], self.respawn_coords[3]
 
     def _clicking_an_arrow(self, keys: list):
         # checks if any of a given key list has been pressed

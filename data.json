@@ -131,6 +131,7 @@
             ["dialog", "xolo2", "Como sea... Para sellar las\nbrechas entre los mundos, debes\ncruzar el Templo y reactivarlo.", 0],
             ["dialog", "xolo2", "Ademas, cuidate de los monstruos\ny las iguanas gigantes, no\ndejes que te alcancen!", 1],
             ["dialog", "xolo2", "Te veo del otro lado!", 0],
+            ["respawn_point", [1145, 818, 5, 6]],
             ["task", [1280, 688], "Encuentra una ruta para salir\ndel Templo del Ajolote."],
             ["set_facing", "up"],
             ["dialog", "xolo2", "Ey! Llegaste, bien!", 0],
@@ -167,6 +168,34 @@
         ],
         "5": [
             ["xolo2", "default", 1280, 656]
+        ]
+    },
+    "mob_locations": {
+        "0": [],
+        "1": [],
+        "5": [
+            [976, 808, "iguana", true],
+            [928, 808, "iguana", true],
+            [952, 864, "iguana", true],
+            [864, 704, "monster", false],
+            [928, 696, "monster", false],
+            [976, 680, "iguana", true],
+            [992, 632, "iguana", false],
+            [1136, 584, "monster-fast", true],
+            [1192, 656, "iguana", false],
+            [1184, 704, "monster-fast", true],
+            [1224, 616, "monster", false],
+            [1336, 776, "iguana", true],
+            [1304, 592, "iguana", true],
+            [1416, 608, "monster", false],
+            [1416, 632, "monster", false],
+            [1304, 880, "monster", false],
+            [1304, 904, "monster", false],
+            [1304, 928, "monster", false],
+            [1112, 944, "iguana", true],
+            [1032, 1008, "iguana", true],
+            [1248, 816, "iguana", true],
+            [1288, 816, "iguana", true]
         ]
     }
 }
