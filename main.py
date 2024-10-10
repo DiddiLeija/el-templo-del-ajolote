@@ -88,6 +88,7 @@ class MobBase:
     aspect = "default"
     harmful = True
     speed = 1
+    sign = 1
     colkey = 0  # in case we don't use the traditional colkey (0)
     update_sleeper = 1  # only update if pyxel.frame_count % self.update_sleeper == 0... B)
 
@@ -97,15 +98,40 @@ class MobBase:
         self.imgtype = "images" if self.size > 8 else "images-8"  # TODO: get a stable method?
 
     def update(self):
+        # print("Updating mob", self, type(self).__name__)
         if pyxel.frame_count % self.update_sleeper != 0:
             return
-        # TODO: fixme! ...
+        dx, dy = 0, 0
+        self._check_sign()
+        if self.vertical:
+            dy = self.speed * self.sign
+            self.aspect = "down" if dy > 0 else "up"
+        else:
+            dx = self.speed * self.sign
+            self.aspect = "right" if dx > 0 else "left"
+        # if fix_collision(self.x, self.y, dx, dy) != (self.x, self.y):
+        #     print("moved")
+        self.x, self.y = fix_collision(self.x, self.y, dx, dy)
 
     def draw(self):
         img = GAME_SETUP[self.imgtype][self.name][self.aspect]
         if self.aspect != "default":
             img = img[0] if pyxel.frame_count % 2 == 0 else img[1]
         pyxel.blt(self.x, self.y, self.imgbank, img[0], img[1], self.size, self.size, self.colkey)
+
+    def _check_sign(self):
+        # TODO: find a more proper method?
+        cx, cy = self.x - 1, self.y - 1
+        if self.vertical:
+            if self.sign > 0:
+                cy += self.size
+            cx += 1
+        else:
+            if self.sign > 0:
+                cx += self.size
+            cy += 1
+        if detect_collision(cx, cy):
+            self.sign *= -1
 
 
 class Monster(MobBase):
@@ -122,6 +148,10 @@ class Iguana(MobBase):
     # Mob type 2 -- iguana
     name = "iguana"
     update_sleeper = 2  # so the Iguana is the slowest mob ;)
+
+
+class IguanaSlow(Iguana):
+    update_sleeper = 4  # much, MUCH slower
 
 
 class Main:
@@ -345,6 +375,8 @@ class Main:
                     final[l].append(Monster(m[0], m[1], m[3]))
                 elif m[2] == "monster-fast":
                     final[l].append(MonsterFast(m[0], m[1], m[3]))
+                elif m[2] == "iguana-slow":
+                    final[l].append(IguanaSlow(m[0], m[1], m[3]))
         return final
 
     def _clicking_an_arrow(self, keys: list):
