@@ -241,6 +241,15 @@ class Main:
             self.player_aspect[1] = 0
         # (x, y) corrections according to a solid blocks list
         self.x, self.y = fix_collision(self.x, self.y, dx, dy)
+        # see if we hit a "harmful" mob
+        for m in self.mob_map[str(BACKGROUND_1)]:
+            xrange = range(self.x+1, self.x+8)
+            yrange = range(self.y+1, self.y+8)
+            if m.x + 2 in xrange or m.x + (m.size-2) in xrange:
+                if m.y + 2 in yrange or m.y + (m.size-2) in yrange:
+                    # print("got hit by a mob")
+                    self.x, self.y = self.respawn_coords[0], self.respawn_coords[1]
+                    BACKGROUND_1, BACKGROUND_2, self.respawn_coords[2], self.respawn_coords[3]
 
     def draw_player(self):
         img_pick = GAME_SETUP["images"]["axel"][self.player_aspect[0]]
