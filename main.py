@@ -183,13 +183,15 @@ class Main:
             if self.plot_index < 0:
                 # finish flag
                 self.open_mode = True
+                self.should_update_player = True
                 return
         else:
             # run extra feats through "open mode"
             self.update_open()
         for m in self.mob_map[str(BACKGROUND_1)]:
             m.update()
-        self.update_player()
+        if self.should_update_player:
+            self.update_player()
         if self.should_update_player is None:
             # None means here "one time negative", so we make it positive now.
             self.should_update_player = True
@@ -218,8 +220,6 @@ class Main:
         pyxel.bltm(0, 0, draw_b, draw_x, draw_y, 128, 128, 0)  # backgound additions
 
     def update_player(self):
-        if not self.should_update_player:
-            return
         # movement checks
         dx, dy = 0, 0
         if pyxel.btn(pyxel.KEY_DOWN):
@@ -277,29 +277,30 @@ class Main:
             return
         ptype = plot[self.plot_index][0]
         pdata = plot[self.plot_index][1:]
+        self.should_update_player = False  # just remember to fix this once the story ends
         if ptype == "set":
             # set the player to a certain position
             BACKGROUND_1, BACKGROUND_2, self.x, self.y = pdata[0], pdata[1], pdata[2], pdata[3]
             self.plot_index += 1
         elif ptype == "dialog":
             # let's chat!
-            if self.should_update_player:
+            if self.should_update_player is not False:
                 self.should_update_player = False
             if pyxel.btnp(pyxel.KEY_SPACE):
                 # TODO: include keypad space key too
                 self.plot_index += 1
-                self.should_update_player = True
+                self.should_update_player = None
         elif ptype == "task":
             # you must get somewhere.
+            self.should_update_player = True  # in this case it should be true
             if pdata[0][0] in range(self.x + 2, self.x + 15):
                 if pdata[0][1] in range(self.y + 2, self.y + 15):
                     self.plot_index += 1
         elif ptype == "set_facing":
             # change Axel's facing.
             self.player_aspect[0] = pdata[0]
-            self.player_aspect[1] = 0  # we don't assume Axel is moving
+            self.player_aspect[1] = 0
             self.plot_index += 1
-            self.should_update_player = None  # small trick!
         elif ptype == "respawn_point":
             # set the respawn point for Axel.
             self.respawn_coords = pdata[0]
