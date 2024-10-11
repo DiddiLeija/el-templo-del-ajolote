@@ -85,8 +85,8 @@
             "left": [[64, 24], [72, 24]]
         }
     },
-    "stories": [
-        [
+    "stories": {
+        "locked": [
             ["set_facing", "up"],
             ["set", 1, 4, 1016, 950],
             ["dialog", null, "Axel y su abuela viven en Ciudad\nde Mexico, donde viven muy\ntranquilamente...", null],
@@ -168,8 +168,19 @@
             ["set", 0, 2, 1016, 976],
             ["respawn_point", [1016, 976, 0, 2]],
             ["set_facing", "down"]
+        ],
+        "xolo-afterparty": [
+            ["dialog", "xolo1", "He escuchado que lo lograste!\nBien hecho!", 0]
+        ],
+        "cris-afterparty": [
+            ["dialog", "cris", "Axel! Lo hiciste! Aunque el\nagujero principal sigue aqui.", 1]
         ]
-    ],
+    },
+    "unlocked-stories-locations": {
+        "0": {},
+        "1": {},
+        "5": {}
+    },
     "npc_locations": {
         "0": [
             ["flower_pot", "white", 995, 968],

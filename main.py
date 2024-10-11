@@ -179,7 +179,7 @@ class Main:
             self.update_menu()
             return
         if not self.open_mode:
-            self.update_story(0)
+            self.update_story("locked")
             if self.plot_index < 0:
                 # finish flag
                 self.open_mode = True
@@ -202,7 +202,7 @@ class Main:
             return
         self.draw_general()
         if not self.open_mode:
-            self.draw_story(0)
+            self.draw_story("locked")
 
     def draw_general(self):
         draw_a, draw_b = BACKGROUND_1, BACKGROUND_2  # TODO: use BACKGROUND_* directly?
@@ -277,7 +277,7 @@ class Main:
     def update_open(self):
         "once the main mission's done, open tasks are unlocked."
 
-    def update_story(self, id=0):
+    def update_story(self, id="locked"):
         "tell a story."
         global BACKGROUND_1, BACKGROUND_2
         plot = GAME_SETUP["stories"][id]
@@ -315,7 +315,7 @@ class Main:
             self.respawn_coords = pdata[0]
             self.plot_index += 1
 
-    def draw_story(self, id=0):
+    def draw_story(self, id="locked"):
         global BACKGROUND_1, BACKGROUND_2
         plot = GAME_SETUP["stories"][id]
         if self.plot_index >= len(plot):
