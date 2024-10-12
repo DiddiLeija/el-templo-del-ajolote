@@ -247,7 +247,6 @@ class Main:
             yrange = range(self.y+1, self.y+8)
             if m.x + 2 in xrange or m.x + (m.size-2) in xrange:
                 if m.y + 2 in yrange or m.y + (m.size-2) in yrange:
-                    # print("got hit by a mob")
                     self.x, self.y = self.respawn_coords[0], self.respawn_coords[1]
                     BACKGROUND_1, BACKGROUND_2, self.respawn_coords[2], self.respawn_coords[3]
 
@@ -289,6 +288,8 @@ class Main:
         self.should_update_player = False  # just remember to fix this once the story ends
         if ptype == "set":
             # set the player to a certain position
+            if pdata[0] != BACKGROUND_1:
+                self.set_music()
             BACKGROUND_1, BACKGROUND_2, self.x, self.y = pdata[0], pdata[1], pdata[2], pdata[3]
             self.plot_index += 1
         elif ptype == "dialog":
@@ -353,7 +354,6 @@ class Main:
             pretty_text(pdata[1], 0, 112, col2=9)
 
     def update_menu(self):
-        # nothing happening here at all.
         if pyxel.btnp(pyxel.KEY_SPACE):
             self.menu = None
 
@@ -366,6 +366,10 @@ class Main:
         pretty_text("Aceptar: Espacio", 25, 48, col2=13)
         pretty_text("Salir: ESC", 25, 56, col2=13)
         pretty_text("Presiona Espacio para comenzar\n     o ESC para abandonar", 4, 90)
+
+    def set_music(self):
+        vol = GAME_SETUP["music-volumes"][str(BACKGROUND_1)]
+        pyxel.playm(vol, loop=True)
 
     def _respawn_player(self):
         # return the character to the right place
