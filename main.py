@@ -170,6 +170,7 @@ class Main:
         self.open_mode = False
         self.menu = True
         self.plot_index = 0
+        self.music_vol = -1  # just to make set_music() react
         self.should_update_player = True
         self.mob_map = self._generate_mob_map()
         pyxel.run(self.update, self.draw)
@@ -195,6 +196,7 @@ class Main:
         if self.should_update_player is None:
             # None means here "one time negative", so we make it positive now.
             self.should_update_player = True
+        self.set_music()
 
     def draw(self):
         if self.menu is not False:
@@ -247,6 +249,7 @@ class Main:
             yrange = range(self.y+1, self.y+8)
             if m.x + 2 in xrange or m.x + (m.size-2) in xrange:
                 if m.y + 2 in yrange or m.y + (m.size-2) in yrange:
+                    pyxel.play(3, 6)
                     self.x, self.y = self.respawn_coords[0], self.respawn_coords[1]
                     BACKGROUND_1, BACKGROUND_2, self.respawn_coords[2], self.respawn_coords[3]
 
@@ -286,10 +289,9 @@ class Main:
         ptype = plot[self.plot_index][0]
         pdata = plot[self.plot_index][1:]
         self.should_update_player = False  # just remember to fix this once the story ends
+        prev_index = self.plot_index
         if ptype == "set":
             # set the player to a certain position
-            if pdata[0] != BACKGROUND_1:
-                self.set_music()
             BACKGROUND_1, BACKGROUND_2, self.x, self.y = pdata[0], pdata[1], pdata[2], pdata[3]
             self.plot_index += 1
         elif ptype == "dialog":
@@ -315,6 +317,9 @@ class Main:
             # set the respawn point for Axel.
             self.respawn_coords = pdata[0]
             self.plot_index += 1
+        # If something useful happens, tick a cool sound
+        if prev_index != self.plot_index:
+            pyxel.play(3, 5)
 
     def draw_story(self, id="locked"):
         global BACKGROUND_1, BACKGROUND_2
@@ -369,7 +374,9 @@ class Main:
 
     def set_music(self):
         vol = GAME_SETUP["music-volumes"][str(BACKGROUND_1)]
-        pyxel.playm(vol, loop=True)
+        if vol != self.music_vol:
+            self.music_vol = vol
+            pyxel.playm(self.music_vol, loop=True)
 
     def _respawn_player(self):
         # return the character to the right place
