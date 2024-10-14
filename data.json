@@ -98,6 +98,7 @@
             ["set", 0, 2, 1016, 976],
             ["set_facing", "right"],
             ["task", [1128, 980], "Ve a la tienda de Don Xolo,\nsobre la misma calle."],
+            ["set_facing", "up"],
             ["dialog", "axel", "Hola, don Xolo!\nMe vende medio kilo de maiz?", 0],
             ["dialog", "xolo1", "Si, Axel! Ahora mismo te lo\ntraigo.", 1],
             ["dialog", "xolo1", "Aqui tienes... Oye, y viste lo\nque ha ocurrido en la estatua\ndel Angel de la\nIndependencia?", 1],
