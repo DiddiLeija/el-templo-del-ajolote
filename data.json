@@ -98,7 +98,6 @@
             ["set", 0, 2, 1016, 976],
             ["set_facing", "right"],
             ["task", [1128, 980], "Ve a la tienda de Don Xolo,\nsobre la misma calle."],
-            ["set_facing", "up"],
             ["dialog", "axel", "Hola, don Xolo!\nMe vende medio kilo de maiz?", 0],
             ["dialog", "xolo1", "Si, Axel! Ahora mismo te lo\ntraigo.", 1],
             ["dialog", "xolo1", "Aqui tienes... Oye, y viste lo\nque ha ocurrido en la estatua\ndel Angel de la\nIndependencia?", 1],
@@ -226,6 +225,7 @@
             [1288, 912, "iguana", false],
             [1112, 944, "iguana", true],
             [1032, 1008, "iguana", true],
+            [1152, 928, "iguana-fast", false],
             [1248, 816, "iguana-slow", true],
             [1288, 816, "iguana-slow", true]
         ]
